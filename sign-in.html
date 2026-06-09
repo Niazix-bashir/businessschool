@@ -1,53 +1,113 @@
-<script type="module">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign In</title>
+  <style>
+    body{
+      font-family: Arial, sans-serif;
+      background:#f4f6f9;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      height:100vh;
+      margin:0;
+    }
 
-import { initializeApp }
-from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    .login-box{
+      background:white;
+      padding:30px;
+      width:350px;
+      border-radius:10px;
+      box-shadow:0 0 15px rgba(0,0,0,0.15);
+    }
 
-import {
-    getAuth,
-    signInWithEmailAndPassword
-}
-from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    h2{
+      text-align:center;
+      margin-bottom:20px;
+    }
 
-const firebaseConfig = {
-    apiKey: "AIzaSyAtw5l9qeb-yjVAk1HvN6BiPc0LBK00aO4",
-    authDomain: "kbschool-623a7.firebaseapp.com",
-    projectId: "kbschool-623a7",
-    storageBucket: "kbschool-623a7.firebasestorage.app",
-    messagingSenderId: "416719769601",
-    appId: "1:416719769601:web:ede07fd447328fd326b000"
-};
+    input{
+      width:100%;
+      padding:12px;
+      margin-bottom:15px;
+      border:1px solid #ccc;
+      border-radius:5px;
+      box-sizing:border-box;
+    }
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
+    button{
+      width:100%;
+      padding:12px;
+      background:#0078d7;
+      color:white;
+      border:none;
+      border-radius:5px;
+      cursor:pointer;
+      font-size:16px;
+    }
 
-window.login = function() {
+    button:hover{
+      background:#005fa3;
+    }
 
-    const email =
-    document.getElementById("email").value;
+    .signup-link{
+      text-align:center;
+      margin-top:15px;
+    }
 
-    const password =
-    document.getElementById("password").value;
+    a{
+      text-decoration:none;
+      color:#0078d7;
+    }
+  </style>
+</head>
+<body>
 
-    signInWithEmailAndPassword(
-        auth,
-        email,
-        password
-    )
-    .then((userCredential) => {
+  <div class="login-box">
+    <h2>Sign In</h2>
 
+    <input id="email" type="email" placeholder="Email Address">
+    <input id="password" type="password" placeholder="Password">
+
+    <button onclick="login()">Sign In</button>
+
+    <div class="signup-link">
+      Don't have an account?
+      <a href="sign-up.html">Sign Up</a>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAtw5l9qeb-yjVAk1HvN6BiPc0LBK00aO4",
+      authDomain: "kbschool-623a7.firebaseapp.com",
+      projectId: "kbschool-623a7",
+      storageBucket: "kbschool-623a7.firebasestorage.app",
+      messagingSenderId: "416719769601",
+      appId: "1:416719769601:web:ede07fd447328fd326b000"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    window.login = async function () {
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value;
+
+      try {
+        await signInWithEmailAndPassword(auth, email, password);
         alert("Login Successful");
-
-        window.location.href =
-        "dashboard.html";
-
-    })
-    .catch((error) => {
-
+        window.location.href = "dashboard.html";
+      } catch (error) {
         alert(error.message);
+      }
+    };
+  </script>
 
-    });
-
-}
-
-</script>
+</body>
+</html>

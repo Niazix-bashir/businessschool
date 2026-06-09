@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -8,27 +7,72 @@
 
 <style>
 body{
-font-family:Arial,sans-serif;
-text-align:center;
-padding-top:100px;
-background:#f4f6f9;
+    font-family: Arial, sans-serif;
+    background:#f4f6f9;
+    margin:0;
+}
+
+.header{
+    background:#0078d7;
+    color:white;
+    padding:15px 20px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.container{
+    max-width:800px;
+    margin:40px auto;
+    background:white;
+    padding:30px;
+    border-radius:10px;
+    box-shadow:0 0 15px rgba(0,0,0,0.1);
+}
+
+h1{
+    margin-top:0;
 }
 
 button{
-padding:12px 20px;
-font-size:16px;
-cursor:pointer;
+    padding:10px 15px;
+    border:none;
+    border-radius:5px;
+    cursor:pointer;
+    background:#dc3545;
+    color:white;
+    font-size:15px;
+}
+
+button:hover{
+    background:#c82333;
+}
+
+.info{
+    margin-top:20px;
+    font-size:18px;
 }
 </style>
-
 </head>
+
 <body>
 
-<h1>Welcome to Dashboard</h1>
+<div class="header">
+    <h2>KBSchool Dashboard</h2>
+    <button onclick="logout()">Logout</button>
+</div>
 
-<p>You are successfully logged in.</p>
+<div class="container">
 
-<button onclick="logout()">Logout</button>
+    <h1>Welcome</h1>
+
+    <div class="info">
+        <p><strong>Name:</strong> <span id="name">Loading...</span></p>
+        <p><strong>Email:</strong> <span id="email">Loading...</span></p>
+        <p><strong>User ID:</strong> <span id="uid">Loading...</span></p>
+    </div>
+
+</div>
 
 <script type="module">
 
@@ -36,33 +80,58 @@ import { initializeApp }
 from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
 import {
-getAuth,
-signOut
+    getAuth,
+    onAuthStateChanged,
+    signOut
 }
 from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 const firebaseConfig = {
-apiKey: "YOUR_API_KEY",
-authDomain: "YOUR_PROJECT.firebaseapp.com",
-projectId: "YOUR_PROJECT_ID",
-storageBucket: "YOUR_PROJECT.appspot.com",
-messagingSenderId: "YOUR_SENDER_ID",
-appId: "YOUR_APP_ID"
+    apiKey: "AIzaSyAtw5l9qeb-yjVAk1HvN6BiPc0LBK00aO4",
+    authDomain: "kbschool-623a7.firebaseapp.com",
+    projectId: "kbschool-623a7",
+    storageBucket: "kbschool-623a7.firebasestorage.app",
+    messagingSenderId: "416719769601",
+    appId: "1:416719769601:web:ede07fd447328fd326b000"
 };
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
-window.logout = function(){
+onAuthStateChanged(auth, (user) => {
 
-signOut(auth)
+    if(user){
 
-.then(()=>{
+        document.getElementById("name").textContent =
+        user.displayName || "Not Set";
 
-window.location.href =
-"sign-in.html";
+        document.getElementById("email").textContent =
+        user.email;
+
+        document.getElementById("uid").textContent =
+        user.uid;
+
+    }else{
+
+        window.location.href = "sign-in.html";
+
+    }
 
 });
+
+window.logout = function(){
+
+    signOut(auth)
+    .then(() => {
+
+        window.location.href = "sign-in.html";
+
+    })
+    .catch((error) => {
+
+        alert(error.message);
+
+    });
 
 }
 

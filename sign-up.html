@@ -1,78 +1,129 @@
-<script type="module">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign Up</title>
+  <style>
+    body{
+      font-family: Arial, sans-serif;
+      background:#f4f6f9;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      height:100vh;
+      margin:0;
+    }
 
-import { initializeApp }
-from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    .signup-box{
+      background:white;
+      width:400px;
+      padding:30px;
+      border-radius:10px;
+      box-shadow:0 0 15px rgba(0,0,0,0.15);
+    }
 
-import {
-    getAuth,
-    createUserWithEmailAndPassword,
-    updateProfile
-}
-from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    h2{
+      text-align:center;
+      margin-bottom:20px;
+    }
 
-const firebaseConfig = {
-    apiKey: "AIzaSyAtw5l9qeb-yjVAk1HvN6BiPc0LBK00aO4",
-    authDomain: "kbschool-623a7.firebaseapp.com",
-    projectId: "kbschool-623a7",
-    storageBucket: "kbschool-623a7.firebasestorage.app",
-    messagingSenderId: "416719769601",
-    appId: "1:416719769601:web:ede07fd447328fd326b000"
-};
+    input{
+      width:100%;
+      padding:12px;
+      margin-bottom:12px;
+      border:1px solid #ccc;
+      border-radius:5px;
+      box-sizing:border-box;
+    }
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
+    button{
+      width:100%;
+      padding:12px;
+      background:#28a745;
+      color:white;
+      border:none;
+      border-radius:5px;
+      font-size:16px;
+      cursor:pointer;
+    }
 
-window.signup = async function() {
+    button:hover{
+      background:#218838;
+    }
 
-    const firstName =
-    document.getElementById("firstName").value;
+    .link{
+      text-align:center;
+      margin-top:15px;
+    }
 
-    const surname =
-    document.getElementById("surname").value;
+    a{
+      text-decoration:none;
+      color:#0078d7;
+    }
+  </style>
+</head>
+<body>
 
-    const email =
-    document.getElementById("email").value;
+  <div class="signup-box">
+    <h2>Create Account</h2>
 
-    const password =
-    document.getElementById("password").value;
+    <input id="firstName" type="text" placeholder="First Name">
+    <input id="surname" type="text" placeholder="Surname">
+    <input id="email" type="email" placeholder="Email Address">
+    <input id="password" type="password" placeholder="Password">
+    <input id="confirmPassword" type="password" placeholder="Confirm Password">
 
-    const confirmPassword =
-    document.getElementById("confirmPassword").value;
+    <button onclick="signup()">Sign Up</button>
 
-    if(password !== confirmPassword){
+    <div class="link">
+      Already have an account?
+      <a href="sign-in.html">Sign In</a>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getAuth, createUserWithEmailAndPassword, updateProfile } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAtw5l9qeb-yjVAk1HvN6BiPc0LBK00aO4",
+      authDomain: "kbschool-623a7.firebaseapp.com",
+      projectId: "kbschool-623a7",
+      storageBucket: "kbschool-623a7.firebasestorage.app",
+      messagingSenderId: "416719769601",
+      appId: "1:416719769601:web:ede07fd447328fd326b000"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    window.signup = async function () {
+      const firstName = document.getElementById("firstName").value.trim();
+      const surname = document.getElementById("surname").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value;
+      const confirmPassword = document.getElementById("confirmPassword").value;
+
+      if (password !== confirmPassword) {
         alert("Passwords do not match");
         return;
-    }
+      }
 
-    try {
+      try {
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
 
-        const userCredential =
-        await createUserWithEmailAndPassword(
-            auth,
-            email,
-            password
-        );
-
-        await updateProfile(
-            userCredential.user,
-            {
-                displayName:
-                firstName + " " + surname
-            }
-        );
+        await updateProfile(userCredential.user, {
+          displayName: `${firstName} ${surname}`.trim()
+        });
 
         alert("Account Created Successfully");
-
-        window.location.href =
-        "dashboard.html";
-
-    }
-    catch(error){
-
+        window.location.href = "dashboard.html";
+      } catch (error) {
         alert(error.message);
+      }
+    };
+  </script>
 
-    }
-
-}
-
-</script>
+</body>
+</html>
