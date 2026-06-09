@@ -1,154 +1,78 @@
-<!DOCTYPE html>
-
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sign Up</title>
-
-<style>
-body{
-    font-family: Arial, sans-serif;
-    background:#f4f6f9;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    height:100vh;
-    margin:0;
-}
-
-.signup-box{
-    background:white;
-    width:400px;
-    padding:30px;
-    border-radius:10px;
-    box-shadow:0 0 15px rgba(0,0,0,0.15);
-}
-
-h2{
-    text-align:center;
-    margin-bottom:20px;
-}
-
-input{
-    width:100%;
-    padding:12px;
-    margin-bottom:12px;
-    border:1px solid #ccc;
-    border-radius:5px;
-    box-sizing:border-box;
-}
-
-button{
-    width:100%;
-    padding:12px;
-    background:#28a745;
-    color:white;
-    border:none;
-    border-radius:5px;
-    font-size:16px;
-    cursor:pointer;
-}
-
-button:hover{
-    background:#218838;
-}
-
-.link{
-    text-align:center;
-    margin-top:15px;
-}
-</style>
-
-</head>
-<body>
-
-<div class="signup-box">
-
-<h2>Create Account</h2>
-
-<input id="firstName" type="text" placeholder="First Name">
-
-<input id="surname" type="text" placeholder="Surname">
-
-<input id="email" type="email" placeholder="Email Address">
-
-<input id="password" type="password" placeholder="Password">
-
-<input id="confirmPassword" type="password" placeholder="Confirm Password">
-
-<button onclick="signup()">Sign Up</button>
-
-<div class="link">
-Already have an account?
-<a href="sign-in.html">Sign In</a>
-</div>
-
-</div>
-
 <script type="module">
 
 import { initializeApp }
 from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
 import {
-getAuth,
-createUserWithEmailAndPassword
+    getAuth,
+    createUserWithEmailAndPassword,
+    updateProfile
 }
 from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 const firebaseConfig = {
-apiKey: "YOUR_API_KEY",
-authDomain: "YOUR_PROJECT.firebaseapp.com",
-projectId: "YOUR_PROJECT_ID",
-storageBucket: "YOUR_PROJECT.appspot.com",
-messagingSenderId: "YOUR_SENDER_ID",
-appId: "YOUR_APP_ID"
+    apiKey: "AIzaSyAtw5l9qeb-yjVAk1HvN6BiPc0LBK00aO4",
+    authDomain: "kbschool-623a7.firebaseapp.com",
+    projectId: "kbschool-623a7",
+    storageBucket: "kbschool-623a7.firebasestorage.app",
+    messagingSenderId: "416719769601",
+    appId: "1:416719769601:web:ede07fd447328fd326b000"
 };
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
-window.signup = function(){
+window.signup = async function() {
 
-const password =
-document.getElementById("password").value;
+    const firstName =
+    document.getElementById("firstName").value;
 
-const confirmPassword =
-document.getElementById("confirmPassword").value;
+    const surname =
+    document.getElementById("surname").value;
 
-if(password !== confirmPassword){
-alert("Passwords do not match");
-return;
-}
+    const email =
+    document.getElementById("email").value;
 
-const email =
-document.getElementById("email").value;
+    const password =
+    document.getElementById("password").value;
 
-createUserWithEmailAndPassword(
-auth,
-email,
-password
-)
+    const confirmPassword =
+    document.getElementById("confirmPassword").value;
 
-.then((userCredential)=>{
+    if(password !== confirmPassword){
+        alert("Passwords do not match");
+        return;
+    }
 
-alert("Account Created Successfully");
+    try {
 
-window.location.href =
-"dashboard.html";
+        const userCredential =
+        await createUserWithEmailAndPassword(
+            auth,
+            email,
+            password
+        );
 
-})
+        await updateProfile(
+            userCredential.user,
+            {
+                displayName:
+                firstName + " " + surname
+            }
+        );
 
-.catch((error)=>{
+        alert("Account Created Successfully");
 
-alert(error.message);
+        window.location.href =
+        "dashboard.html";
 
-});
+    }
+    catch(error){
+
+        alert(error.message);
+
+    }
 
 }
 
 </script>
-
-</body>
-</html>
